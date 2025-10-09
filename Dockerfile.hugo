@@ -1,18 +1,31 @@
 # Build stage for Hugo
-FROM klakegg/hugo:ext-alpine AS builder
+FROM hugomods/hugo:latest AS builder
 
 WORKDIR /src
+
+# Install git
+RUN apk add --no-cache git
 
 # Copy Hugo site files
 COPY . .
 
 # Clone PaperMod theme (Portainer doesn't handle submodules)
-RUN apk add --no-cache git && \
-    rm -rf themes/PaperMod && \
+RUN rm -rf themes/PaperMod && \
     git clone --depth=1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
 
-# Build the Hugo site
-RUN hugo --minify
+# Debug output - let's see what's happening
+RUN echo "=== Hugo Version ===" && \
+    hugo version && \
+    echo "=== Directory Contents ===" && \
+    ls -la && \
+    echo "=== Theme Contents ===" && \
+    ls -la themes/PaperMod/ && \
+    echo "=== Config File ===" && \
+    cat hugo.toml
+
+# Try building with maximum verbosity to see the actual error
+RUN hugo --minify --verbose --debug || \
+    (echo "=== BUILD FAILED - Trying without minify ===" && hugo --verbose --debug)
 
 # Production stage - Nginx to serve static files
 FROM nginx:alpine
