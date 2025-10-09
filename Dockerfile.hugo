@@ -23,9 +23,8 @@ RUN echo "=== Hugo Version ===" && \
     echo "=== Config File ===" && \
     cat hugo.toml
 
-# Try building with maximum verbosity to see the actual error
-RUN hugo --minify --verbose --debug || \
-    (echo "=== BUILD FAILED - Trying without minify ===" && hugo --verbose --debug)
+# Build the Hugo site (hugomods/hugo doesn't use --verbose flag)
+RUN hugo --minify
 
 # Production stage - Nginx to serve static files
 FROM nginx:alpine
