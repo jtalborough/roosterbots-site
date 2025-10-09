@@ -1,5 +1,5 @@
 # Build stage for Hugo
-FROM hugomods/hugo:latest AS builder
+FROM hugomods/hugo:exts AS builder
 
 # Install git to clone theme
 RUN apk add --no-cache git
