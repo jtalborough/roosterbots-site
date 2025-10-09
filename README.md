@@ -22,8 +22,8 @@ A modern, fast website built with Hugo for our FTC team, featuring a blog, merch
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd RoosterBotsSite
+git clone https://github.com/jtalborough/roosterbots-site.git
+cd roosterbots-site
 git submodule update --init --recursive
 ```
 
