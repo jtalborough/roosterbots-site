@@ -1,13 +1,23 @@
 # Build stage for Hugo
 FROM hugomods/hugo:latest AS builder
 
+# Install git to clone theme
+RUN apk add --no-cache git
+
 WORKDIR /src
 
 # Copy Hugo site files
 COPY . .
 
+# Clone PaperMod theme if not present (for Portainer builds without submodules)
+RUN if [ ! -d "themes/PaperMod/.git" ]; then \
+        echo "Cloning PaperMod theme..." && \
+        rm -rf themes/PaperMod && \
+        git clone --depth=1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod; \
+    fi
+
 # Build the Hugo site
-RUN hugo --minify
+RUN hugo --minify --verbose
 
 # Production stage - Nginx to serve static files
 FROM nginx:alpine
