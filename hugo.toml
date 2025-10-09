@@ -1,12 +1,14 @@
+# Change this to https://roosterbots.org when ready for production
 baseURL = 'https://roosterbots.designbuildautomate.io'
 languageCode = 'en-us'
-title = 'RoosterBots'
+title = 'RoosterBots FTC #31669'
 theme = 'PaperMod'
 
 [params]
-  description = "RoosterBots - FIRST Tech Challenge Team from West Virginia"
-  author = "RoosterBots FTC Team"
+  description = "RoosterBots FTC Team #31669 - Lost River Valley, West Virginia - Chesapeake Region"
+  author = "RoosterBots FTC Team #31669"
   images = ["/images/logo.png"]
+  keywords = ["FTC", "FIRST Tech Challenge", "Robotics", "West Virginia", "Team 31669", "RoosterBots", "Chesapeake"]
   ShowReadingTime = true
   ShowShareButtons = false
   ShowPostNavLinks = true
@@ -15,8 +17,8 @@ theme = 'PaperMod'
   defaultTheme = "auto"
 
 [params.homeInfoParams]
-  Title = "Welcome to RoosterBots"
-  Content = "West Virginia's Premier FIRST Tech Challenge Team - Building robots, building futures."
+  Title = "RoosterBots FTC #31669"
+  Content = "Lost River Valley, West Virginia | Chesapeake Region | 2025-2026 Season"
 
 [params.profileMode]
   enabled = false

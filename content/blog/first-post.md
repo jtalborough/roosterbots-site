@@ -21,9 +21,9 @@ Follow along as we document our robotics season, from initial design concepts to
 - 💡 **Technical Insights** - Engineering challenges and solutions
 - 🎓 **Learning Experiences** - Skills we're developing
 
-## This Season
+## 2025-2026 Season
 
-We're gearing up for an exciting season of competition. Check back regularly for updates as we design, build, and program our robot!
+We're gearing up for an exciting 2025-2026 season competing in the Chesapeake Region! Check back regularly for updates as we design, build, and program our robot for this year's challenge.
 
 ## Get Involved
 

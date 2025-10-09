@@ -4,9 +4,9 @@ date: 2025-10-09
 draft: false
 ---
 
-# About RoosterBots
+# About RoosterBots FTC #31669
 
-We are the RoosterBots, a FIRST Tech Challenge team from West Virginia dedicated to excellence in robotics, engineering, and community outreach.
+We are the RoosterBots, FIRST Tech Challenge Team #31669 from Lost River Valley, West Virginia. Competing in the Chesapeake Region, we are dedicated to excellence in robotics, engineering, and community outreach.
 
 ## Our Mission
 
@@ -31,9 +31,17 @@ FIRST Tech Challenge (FTC) is a robotics competition for students in grades 7-12
 
 *Coaching staff information coming soon*
 
-## Current Season
+## 2025-2026 Season
 
-*Information about our current robot and competition season*
+We're excited to compete in the 2025-2026 FIRST Tech Challenge season! Follow our journey as we design, build, and program our robot for this year's game challenge.
+
+### Competition Schedule
+
+*Competition dates and locations coming soon*
+
+### Our Robot
+
+*Robot details and specifications coming soon*
 
 ## Contact Us
 
