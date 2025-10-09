@@ -1,6 +1,6 @@
-baseURL = 'https://your-domain.com/'
+baseURL = 'https://roosterbots.designbuildautomate.io/'
 languageCode = 'en-us'
-title = 'FIRST Tech Challenge Team'
+title = 'RoosterBots FTC Team'
 theme = 'PaperMod'
 
 [params]
@@ -14,8 +14,8 @@ theme = 'PaperMod'
   defaultTheme = "auto"
 
 [params.homeInfoParams]
-  Title = "Welcome to Our FTC Team"
-  Content = "Follow our journey in robotics competition"
+  Title = "Welcome to RoosterBots"
+  Content = "Follow our FIRST Tech Challenge journey in robotics competition"
 
 [[menu.main]]
   name = "Home"
