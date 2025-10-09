@@ -1,0 +1,262 @@
+{{ define "main" }}
+<div class="donate-container">
+  <h1>{{ .Title }}</h1>
+  <div class="donate-content">
+    {{ .Content }}
+  </div>
+
+  <div class="donation-form">
+    <h2>Choose Your Donation Amount</h2>
+    
+    <div class="preset-amounts">
+      <button class="amount-btn" data-amount="10">$10</button>
+      <button class="amount-btn" data-amount="25">$25</button>
+      <button class="amount-btn" data-amount="50">$50</button>
+      <button class="amount-btn" data-amount="100">$100</button>
+      <button class="amount-btn" data-amount="250">$250</button>
+    </div>
+
+    <div class="custom-amount-section">
+      <label for="custom-amount">Or enter a custom amount:</label>
+      <div class="input-group">
+        <span class="currency-symbol">$</span>
+        <input 
+          type="number" 
+          id="custom-amount" 
+          placeholder="0.00" 
+          min="1" 
+          step="0.01"
+        >
+      </div>
+    </div>
+
+    <button id="donate-btn" class="btn-donate" disabled>
+      Donate Now
+    </button>
+
+    <p class="secure-notice">
+      🔒 Secure payment powered by Stripe
+    </p>
+  </div>
+</div>
+
+<style>
+  .donate-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .donate-content {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .donate-content ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .donate-content li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .donate-content li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #16a34a;
+    font-weight: bold;
+  }
+
+  .donation-form {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  .donation-form h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #1e293b;
+  }
+
+  .preset-amounts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .amount-btn {
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .amount-btn:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+  }
+
+  .amount-btn.selected {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: white;
+  }
+
+  .custom-amount-section {
+    margin-bottom: 2rem;
+  }
+
+  .custom-amount-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #475569;
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .currency-symbol {
+    position: absolute;
+    left: 1rem;
+    font-size: 1.5rem;
+    color: #64748b;
+    font-weight: bold;
+  }
+
+  #custom-amount {
+    width: 100%;
+    padding: 1rem 1rem 1rem 2.5rem;
+    font-size: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+  }
+
+  #custom-amount:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+
+  .btn-donate {
+    width: 100%;
+    padding: 1.25rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 1rem;
+  }
+
+  .btn-donate:hover:not(:disabled) {
+    background: #15803d;
+  }
+
+  .btn-donate:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+  }
+
+  .secure-notice {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .preset-amounts {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<script>
+  const API_URL = '/api';
+  let selectedAmount = null;
+
+  // Handle preset amount selection
+  document.querySelectorAll('.amount-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedAmount = parseFloat(this.dataset.amount);
+      document.getElementById('custom-amount').value = '';
+      updateDonateButton();
+    });
+  });
+
+  // Handle custom amount input
+  document.getElementById('custom-amount').addEventListener('input', function() {
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+    selectedAmount = parseFloat(this.value) || null;
+    updateDonateButton();
+  });
+
+  function updateDonateButton() {
+    const donateBtn = document.getElementById('donate-btn');
+    donateBtn.disabled = !selectedAmount || selectedAmount < 1;
+    
+    if (selectedAmount && selectedAmount >= 1) {
+      donateBtn.textContent = `Donate $${selectedAmount.toFixed(2)}`;
+    } else {
+      donateBtn.textContent = 'Donate Now';
+    }
+  }
+
+  // Handle donation submission
+  document.getElementById('donate-btn').addEventListener('click', async function() {
+    if (!selectedAmount || selectedAmount < 1) {
+      alert('Please select or enter a donation amount');
+      return;
+    }
+
+    this.disabled = true;
+    this.textContent = 'Processing...';
+
+    try {
+      const response = await fetch(`${API_URL}/create-donation-session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          amount: selectedAmount,
+          customAmount: document.getElementById('custom-amount').value ? selectedAmount : null
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create donation session');
+      }
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Donation error:', error);
+      alert('Failed to process donation. Please try again.');
+      this.disabled = false;
+      updateDonateButton();
+    }
+  });
+</script>
+{{ end }}

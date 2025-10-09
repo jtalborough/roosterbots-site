@@ -1,0 +1,25 @@
+[
+  {
+    "id": "tshirt-001",
+    "name": "Team T-Shirt",
+    "description": "Official team t-shirt with our logo",
+    "price": 20.00,
+    "image": "/images/products/tshirt.jpg",
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "id": "hoodie-001",
+    "name": "Team Hoodie",
+    "description": "Comfortable hoodie with team branding",
+    "price": 35.00,
+    "image": "/images/products/hoodie.jpg",
+    "sizes": ["S", "M", "L", "XL"]
+  },
+  {
+    "id": "hat-001",
+    "name": "Team Cap",
+    "description": "Adjustable cap with embroidered logo",
+    "price": 15.00,
+    "image": "/images/products/cap.jpg"
+  }
+]
