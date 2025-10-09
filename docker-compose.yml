@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile.hugo
     container_name: ftc-web
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     depends_on:
       - api
     restart: unless-stopped
@@ -19,8 +19,8 @@ services:
       context: ./api
       dockerfile: Dockerfile
     container_name: ftc-api
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - PORT=${PORT:-3000}
@@ -37,6 +37,16 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: ftc-cloudflared
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    restart: unless-stopped
+    networks:
+      - ftc-network
+    depends_on:
+      - web
 
 networks:
   ftc-network:
