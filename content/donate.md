@@ -1,17 +1,25 @@
 ---
-title: "Support Our Team"
+title: "Support RoosterBots"
 date: 2025-10-09
 draft: false
 layout: "donate"
 ---
 
-# Support Our FTC Team
+# Support the RoosterBots
 
-Your donation helps us:
-- Purchase robot parts and materials
-- Cover competition registration fees
-- Fund travel to competitions
-- Provide tools and equipment
-- Support outreach programs
+Your generous donation directly supports our team's mission to inspire the next generation of engineers and innovators.
 
-Every contribution makes a difference in our journey!
+## Where Your Donation Goes
+
+- 🤖 **Robot Parts & Materials** - High-quality components for competitive robots
+- 🎫 **Competition Fees** - Registration for regional and state championships
+- 🚗 **Travel Expenses** - Transportation to competitions across the region
+- 🔧 **Tools & Equipment** - Essential workshop tools and safety gear
+- 📚 **Educational Resources** - Training materials and software licenses
+- 🌟 **Outreach Programs** - STEM education in our community
+
+## Make an Impact
+
+Every contribution, no matter the size, makes a real difference in providing opportunities for our student team members to learn, grow, and compete at the highest level.
+
+**Thank you for supporting RoosterBots!** 🙏

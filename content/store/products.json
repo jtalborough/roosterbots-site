@@ -1,25 +1,25 @@
 [
   {
     "id": "tshirt-001",
-    "name": "Team T-Shirt",
-    "description": "Official team t-shirt with our logo",
+    "name": "RoosterBots T-Shirt",
+    "description": "Official RoosterBots t-shirt with team logo",
     "price": 20.00,
-    "image": "/images/products/tshirt.jpg",
-    "sizes": ["S", "M", "L", "XL"]
+    "image": "/images/logo.png",
+    "sizes": ["Youth S", "Youth M", "Youth L", "Adult S", "Adult M", "Adult L", "Adult XL"]
   },
   {
     "id": "hoodie-001",
-    "name": "Team Hoodie",
-    "description": "Comfortable hoodie with team branding",
+    "name": "RoosterBots Hoodie",
+    "description": "Comfortable hoodie with RoosterBots branding",
     "price": 35.00,
-    "image": "/images/products/hoodie.jpg",
-    "sizes": ["S", "M", "L", "XL"]
+    "image": "/images/logo.png",
+    "sizes": ["Youth S", "Youth M", "Youth L", "Adult S", "Adult M", "Adult L", "Adult XL"]
   },
   {
     "id": "hat-001",
-    "name": "Team Cap",
-    "description": "Adjustable cap with embroidered logo",
+    "name": "RoosterBots Cap",
+    "description": "Adjustable cap with embroidered RoosterBots logo",
     "price": 15.00,
-    "image": "/images/products/cap.jpg"
+    "image": "/images/logo.png"
   }
 ]

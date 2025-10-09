@@ -1,11 +1,12 @@
-baseURL = 'https://roosterbots.designbuildautomate.io/'
+baseURL = 'https://roosterbots.designbuildautomate.io'
 languageCode = 'en-us'
-title = 'RoosterBots FTC Team'
+title = 'RoosterBots'
 theme = 'PaperMod'
 
 [params]
-  description = "Our FIRST Tech Challenge team website"
-  author = "FTC Team"
+  description = "RoosterBots - FIRST Tech Challenge Team from West Virginia"
+  author = "RoosterBots FTC Team"
+  images = ["/images/logo.png"]
   ShowReadingTime = true
   ShowShareButtons = false
   ShowPostNavLinks = true
@@ -15,7 +16,15 @@ theme = 'PaperMod'
 
 [params.homeInfoParams]
   Title = "Welcome to RoosterBots"
-  Content = "Follow our FIRST Tech Challenge journey in robotics competition"
+  Content = "West Virginia's Premier FIRST Tech Challenge Team - Building robots, building futures."
+
+[params.profileMode]
+  enabled = false
+
+[params.label]
+  text = "RoosterBots"
+  icon = "/images/logo.png"
+  iconHeight = 35
 
 [[menu.main]]
   name = "Home"
