@@ -16,8 +16,16 @@ RUN if [ ! -d "themes/PaperMod/.git" ]; then \
         git clone --depth=1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod; \
     fi
 
-# Build the Hugo site
-RUN hugo --minify --verbose
+# Debug: List files to verify structure
+RUN echo "=== Checking directory structure ===" && \
+    ls -la && \
+    echo "=== Checking themes ===" && \
+    ls -la themes/ && \
+    echo "=== Checking content ===" && \
+    ls -la content/ || true
+
+# Build the Hugo site (with error output)
+RUN hugo --minify --verbose 2>&1 || (echo "Hugo build failed!" && cat /src/hugo.toml && exit 1)
 
 # Production stage - Nginx to serve static files
 FROM nginx:alpine
