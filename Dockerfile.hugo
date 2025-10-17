@@ -24,9 +24,9 @@ RUN echo "=== Hugo Version ===" && \
     echo "=== Config File ===" && \
     cat content/hugo.toml
 
-# Build the Hugo site (hugomods/hugo doesn't use --verbose flag)
+# Build the Hugo site with detailed error logging
 # The --source flag tells Hugo where to find the site files
-RUN hugo --minify --source content
+RUN hugo --minify --source content --logLevel debug || (echo 'Hugo build failed. See logs above.' && exit 1)
 
 # Production stage - Nginx to serve static files
 FROM nginx:alpine
