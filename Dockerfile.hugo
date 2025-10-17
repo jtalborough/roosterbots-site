@@ -9,11 +9,11 @@ RUN apk add --no-cache git
 # Copy Hugo site files
 COPY . .
 
-# Clone submodules individually to avoid potential auth issues
+# Clone submodules individually, ensuring target directories are empty
 # Clone PaperMod Theme
-RUN git clone --depth 1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
+RUN rm -rf themes/PaperMod && git clone --depth 1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
 # Clone Content Repo
-RUN git clone --depth 1 https://github.com/jtalborough/roosterbots-content.git content
+RUN rm -rf content && git clone --depth 1 https://github.com/jtalborough/roosterbots-content.git content
 
 # Debug output - let's see what's happening
 RUN echo "=== Hugo Version ===" && \
