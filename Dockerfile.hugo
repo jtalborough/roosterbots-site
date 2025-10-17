@@ -24,15 +24,19 @@ RUN echo "=== Hugo Version ===" && \
     echo "=== Config File ===" && \
     cat content/hugo.toml
 
-# Build the Hugo site with detailed error logging
+# Move the themes directory into the content directory so Hugo can find it
+RUN mv themes content/
+
+# Build the Hugo site
 # The --source flag tells Hugo where to find the site files
-RUN hugo --minify --source content --logLevel debug || (echo 'Hugo build failed. See logs above.' && exit 1)
+RUN hugo --minify --source content
 
 # Production stage - Nginx to serve static files
 FROM nginx:alpine
 
 # Copy built site from builder
-COPY --from=builder /src/public /usr/share/nginx/html
+# The output will be in content/public because of the --source flag
+COPY --from=builder /src/content/public /usr/share/nginx/html
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
