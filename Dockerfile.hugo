@@ -9,9 +9,8 @@ RUN apk add --no-cache git
 # Copy Hugo site files
 COPY . .
 
-# Clone PaperMod theme (Portainer doesn't handle submodules)
-RUN rm -rf themes/PaperMod && \
-    git clone --depth=1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
+# Initialize Git submodules (for themes and content)
+RUN git submodule update --init --recursive
 
 # Debug output - let's see what's happening
 RUN echo "=== Hugo Version ===" && \
@@ -20,11 +19,14 @@ RUN echo "=== Hugo Version ===" && \
     ls -la && \
     echo "=== Theme Contents ===" && \
     ls -la themes/PaperMod/ && \
+    echo "=== Content Submodule Contents ===" && \
+    ls -la content/ && \
     echo "=== Config File ===" && \
-    cat hugo.toml
+    cat content/hugo.toml
 
 # Build the Hugo site (hugomods/hugo doesn't use --verbose flag)
-RUN hugo --minify
+# The --source flag tells Hugo where to find the site files
+RUN hugo --minify --source content
 
 # Production stage - Nginx to serve static files
 FROM nginx:alpine
