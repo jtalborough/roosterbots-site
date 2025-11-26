@@ -73,30 +73,40 @@ app.get('/callback', async (req, res) => {
     }
 
     // Return the token to Decap CMS via postMessage
+    const tokenPayload = JSON.stringify({ token: tokenData.access_token, provider: 'github' });
     const html = `
       <!DOCTYPE html>
       <html>
-      <head><title>Authorization Complete</title></head>
-      <body>
+      <head>
+        <title>Authorization Complete</title>
         <script>
           (function() {
-            function receiveMessage(e) {
-              console.log("receiveMessage", e);
-              window.opener.postMessage(
-                'authorization:github:success:${JSON.stringify({ token: tokenData.access_token, provider: 'github' })}',
-                e.origin
-              );
+            const data = 'authorization:github:success:${tokenPayload}';
+            
+            if (window.opener) {
+              // Popup mode - send message to opener
+              window.opener.postMessage(data, '*');
               window.close();
+            } else {
+              // Not a popup - try localStorage fallback
+              localStorage.setItem('decap-cms-auth', data);
+              document.body.innerHTML = '<p>Authentication successful! You can close this window.</p>';
+              // Also try to communicate via BroadcastChannel
+              try {
+                const bc = new BroadcastChannel('decap-cms-auth');
+                bc.postMessage(data);
+              } catch(e) {}
             }
-            window.addEventListener("message", receiveMessage, false);
-            window.opener.postMessage("authorizing:github", "*");
-          })()
+          })();
         </script>
+      </head>
+      <body>
+        <p>Authenticating...</p>
       </body>
       </html>
     `;
     // Allow inline script execution for this OAuth callback
-    res.setHeader('Content-Security-Policy', "script-src 'unsafe-inline'");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'unsafe-inline'");
     res.send(html);
   } catch (error) {
     console.error('OAuth callback error:', error);
