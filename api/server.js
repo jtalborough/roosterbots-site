@@ -74,10 +74,10 @@ app.get('/callback', async (req, res) => {
       return res.status(400).send(`OAuth error: ${tokenData.error_description}`);
     }
 
-    // Redirect to admin with token in URL hash
-    // Hash is never sent to server, so Cloudflare can't strip it
+    // Redirect to static callback page with token
+    // Static page won't have CSP issues from Cloudflare
     const token = tokenData.access_token;
-    res.redirect(`/admin/#token=${encodeURIComponent(token)}`);
+    res.redirect(`/admin/callback.html#token=${encodeURIComponent(token)}`);
   } catch (error) {
     console.error('OAuth callback error:', error);
     res.status(500).send('Authentication failed');
