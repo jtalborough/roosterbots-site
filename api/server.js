@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -14,6 +15,7 @@ app.use(cors({
   origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
   credentials: true
 }));
+app.use(cookieParser());
 app.use(express.json());
 
 // Rate limiting
@@ -72,52 +74,18 @@ app.get('/callback', async (req, res) => {
       return res.status(400).send(`OAuth error: ${tokenData.error_description}`);
     }
 
-    // Store token in localStorage format Decap CMS expects, then redirect
-    const tokenPayload = JSON.stringify({ 
-      token: tokenData.access_token, 
-      provider: 'github' 
+    // Set token in cookie, then redirect to admin
+    // Cookie will be read by a script on the admin page
+    const token = tokenData.access_token;
+    
+    res.cookie('gh_token', token, {
+      httpOnly: false,  // Needs to be readable by JS
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 60000  // 1 minute - just needs to survive the redirect
     });
     
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Authorization Complete</title>
-        <script>
-          (function() {
-            const tokenData = ${tokenPayload};
-            
-            // Store in the format Decap CMS expects
-            localStorage.setItem('netlify-cms-user', JSON.stringify({
-              token: tokenData.token,
-              provider: 'github'
-            }));
-            
-            // Try postMessage first (in case popup works)
-            if (window.opener) {
-              try {
-                window.opener.postMessage(
-                  'authorization:github:success:' + JSON.stringify(tokenData),
-                  '*'
-                );
-                window.close();
-                return;
-              } catch(e) {}
-            }
-            
-            // Redirect back to admin
-            window.location.href = '/admin/';
-          })();
-        </script>
-      </head>
-      <body>
-        <p>Authenticating... redirecting to CMS.</p>
-      </body>
-      </html>
-    `;
-    // Allow inline script execution for this OAuth callback
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'unsafe-inline'; connect-src *");
-    res.send(html);
+    res.redirect('/admin/');
   } catch (error) {
     console.error('OAuth callback error:', error);
     res.status(500).send('Authentication failed');

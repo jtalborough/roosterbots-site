@@ -12,7 +12,7 @@ COPY . .
 # Clone submodules individually, ensuring target directories are empty
 # Clone PaperMod Theme
 RUN rm -rf themes/PaperMod && git clone --depth 1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod
-# Clone Content Repo (always fetch fresh - cache bust: 2025-11-26-v3)
+# Clone Content Repo (always fetch fresh - cache bust: 2025-11-26-v4)
 RUN rm -rf content && git clone --depth 1 https://github.com/jtalborough/roosterbots-content.git content
 
 # Debug output - let's see what's happening
