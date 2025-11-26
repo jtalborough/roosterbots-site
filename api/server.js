@@ -72,8 +72,12 @@ app.get('/callback', async (req, res) => {
       return res.status(400).send(`OAuth error: ${tokenData.error_description}`);
     }
 
-    // Return the token to Decap CMS via postMessage
-    const tokenPayload = JSON.stringify({ token: tokenData.access_token, provider: 'github' });
+    // Store token in localStorage format Decap CMS expects, then redirect
+    const tokenPayload = JSON.stringify({ 
+      token: tokenData.access_token, 
+      provider: 'github' 
+    });
+    
     const html = `
       <!DOCTYPE html>
       <html>
@@ -81,32 +85,38 @@ app.get('/callback', async (req, res) => {
         <title>Authorization Complete</title>
         <script>
           (function() {
-            const data = 'authorization:github:success:${tokenPayload}';
+            const tokenData = ${tokenPayload};
             
+            // Store in the format Decap CMS expects
+            localStorage.setItem('netlify-cms-user', JSON.stringify({
+              token: tokenData.token,
+              provider: 'github'
+            }));
+            
+            // Try postMessage first (in case popup works)
             if (window.opener) {
-              // Popup mode - send message to opener
-              window.opener.postMessage(data, '*');
-              window.close();
-            } else {
-              // Not a popup - try localStorage fallback
-              localStorage.setItem('decap-cms-auth', data);
-              document.body.innerHTML = '<p>Authentication successful! You can close this window.</p>';
-              // Also try to communicate via BroadcastChannel
               try {
-                const bc = new BroadcastChannel('decap-cms-auth');
-                bc.postMessage(data);
+                window.opener.postMessage(
+                  'authorization:github:success:' + JSON.stringify(tokenData),
+                  '*'
+                );
+                window.close();
+                return;
               } catch(e) {}
             }
+            
+            // Redirect back to admin
+            window.location.href = '/admin/';
           })();
         </script>
       </head>
       <body>
-        <p>Authenticating...</p>
+        <p>Authenticating... redirecting to CMS.</p>
       </body>
       </html>
     `;
     // Allow inline script execution for this OAuth callback
-    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'unsafe-inline'");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'unsafe-inline'; connect-src *");
     res.send(html);
   } catch (error) {
     console.error('OAuth callback error:', error);
