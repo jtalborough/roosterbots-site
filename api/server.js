@@ -74,19 +74,10 @@ app.get('/callback', async (req, res) => {
       return res.status(400).send(`OAuth error: ${tokenData.error_description}`);
     }
 
-    // Set token in cookie, then redirect to admin
-    // Cookie will be read by a script on the admin page
+    // Redirect to admin with token in URL hash
+    // Hash is never sent to server, so Cloudflare can't strip it
     const token = tokenData.access_token;
-    
-    res.cookie('gh_token', token, {
-      httpOnly: false,  // Needs to be readable by JS
-      secure: true,
-      sameSite: 'lax',
-      path: '/',        // Make cookie accessible site-wide
-      maxAge: 60000     // 1 minute - just needs to survive the redirect
-    });
-    
-    res.redirect('/admin/');
+    res.redirect(`/admin/#token=${encodeURIComponent(token)}`);
   } catch (error) {
     console.error('OAuth callback error:', error);
     res.status(500).send('Authentication failed');
