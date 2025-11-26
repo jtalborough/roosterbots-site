@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.hugo
+      args:
+        CACHEBUST: ${CACHEBUST:-1}
     container_name: ftc-web
     expose:
       - "80"
