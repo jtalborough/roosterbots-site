@@ -82,7 +82,8 @@ app.get('/callback', async (req, res) => {
       httpOnly: false,  // Needs to be readable by JS
       secure: true,
       sameSite: 'lax',
-      maxAge: 60000  // 1 minute - just needs to survive the redirect
+      path: '/',        // Make cookie accessible site-wide
+      maxAge: 60000     // 1 minute - just needs to survive the redirect
     });
     
     res.redirect('/admin/');
