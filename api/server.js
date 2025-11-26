@@ -73,23 +73,31 @@ app.get('/callback', async (req, res) => {
     }
 
     // Return the token to Decap CMS via postMessage
-    const script = `
-      <script>
-        (function() {
-          function receiveMessage(e) {
-            console.log("receiveMessage %o", e);
-            window.opener.postMessage(
-              'authorization:github:success:${JSON.stringify({ token: tokenData.access_token, provider: 'github' })}',
-              e.origin
-            );
-            window.close();
-          }
-          window.addEventListener("message", receiveMessage, false);
-          window.opener.postMessage("authorizing:github", "*");
-        })()
-      </script>
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head><title>Authorization Complete</title></head>
+      <body>
+        <script>
+          (function() {
+            function receiveMessage(e) {
+              console.log("receiveMessage", e);
+              window.opener.postMessage(
+                'authorization:github:success:${JSON.stringify({ token: tokenData.access_token, provider: 'github' })}',
+                e.origin
+              );
+              window.close();
+            }
+            window.addEventListener("message", receiveMessage, false);
+            window.opener.postMessage("authorizing:github", "*");
+          })()
+        </script>
+      </body>
+      </html>
     `;
-    res.send(script);
+    // Allow inline script execution for this OAuth callback
+    res.setHeader('Content-Security-Policy', "script-src 'unsafe-inline'");
+    res.send(html);
   } catch (error) {
     console.error('OAuth callback error:', error);
     res.status(500).send('Authentication failed');
