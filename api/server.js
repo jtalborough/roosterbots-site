@@ -28,6 +28,74 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// ============================================
+// GitHub OAuth for Decap CMS
+// ============================================
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+
+// Step 1: Redirect to GitHub for authorization
+app.get('/api/auth', (req, res) => {
+  const redirectUri = `${process.env.BASE_URL}/api/callback`;
+  const scope = 'repo,user';
+  const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
+  res.redirect(authUrl);
+});
+
+// Step 2: Handle OAuth callback from GitHub
+app.get('/api/callback', async (req, res) => {
+  const { code } = req.query;
+  
+  if (!code) {
+    return res.status(400).send('Missing authorization code');
+  }
+
+  try {
+    // Exchange code for access token
+    const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        client_id: GITHUB_CLIENT_ID,
+        client_secret: GITHUB_CLIENT_SECRET,
+        code: code
+      })
+    });
+
+    const tokenData = await tokenResponse.json();
+
+    if (tokenData.error) {
+      console.error('GitHub OAuth error:', tokenData.error_description);
+      return res.status(400).send(`OAuth error: ${tokenData.error_description}`);
+    }
+
+    // Return the token to Decap CMS via postMessage
+    const script = `
+      <script>
+        (function() {
+          function receiveMessage(e) {
+            console.log("receiveMessage %o", e);
+            window.opener.postMessage(
+              'authorization:github:success:${JSON.stringify({ token: tokenData.access_token, provider: 'github' })}',
+              e.origin
+            );
+            window.close();
+          }
+          window.addEventListener("message", receiveMessage, false);
+          window.opener.postMessage("authorizing:github", "*");
+        })()
+      </script>
+    `;
+    res.send(script);
+  } catch (error) {
+    console.error('OAuth callback error:', error);
+    res.status(500).send('Authentication failed');
+  }
+});
+
 // Create Stripe checkout session for store items
 app.post('/create-checkout-session', async (req, res) => {
   try {
