@@ -35,7 +35,7 @@ const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
 // Step 1: Redirect to GitHub for authorization
-app.get('/api/auth', (req, res) => {
+app.get('/auth', (req, res) => {
   const redirectUri = `${process.env.BASE_URL}/api/callback`;
   const scope = 'repo,user';
   const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
@@ -43,7 +43,7 @@ app.get('/api/auth', (req, res) => {
 });
 
 // Step 2: Handle OAuth callback from GitHub
-app.get('/api/callback', async (req, res) => {
+app.get('/callback', async (req, res) => {
   const { code } = req.query;
   
   if (!code) {
